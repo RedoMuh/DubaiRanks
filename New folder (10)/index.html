@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DubaiEco - Premium Ranks Store</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=ATHdcwiWPP4xzEahEfifs69QGHrQhTMiCkho5i6hMPD5NWODaYpBvFg5ipY00TuWvnZeDdg1sPsF6fo9&currency=USD"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .navbar {
+            background: rgba(30, 30, 45, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #7c3aed;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ffd700;
+            color: #333;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .server-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: inline-block;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ranks-section {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .ranks-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #fff;
+        }
+
+        .ranks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+        }
+
+        .rank-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rank-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .rank-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .rank-card.dusty::before { background: linear-gradient(135deg, #ffa726, #ff9800); }
+        .rank-card.emo::before { background: linear-gradient(135deg, #dc143c, #b71c1c); }
+        .rank-card.hot::before { background: linear-gradient(135deg, #ff5722, #d32f2f); }
+        .rank-card.dubai::before { background: linear-gradient(135deg, #4caf50, #2e7d32); }
+
+        .rank-name {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .rank-name.dusty { color: #ff9800; }
+        .rank-name.emo { color: #dc143c; }
+        .rank-name.hot { color: #ff5722; }
+        .rank-name.dubai { color: #4caf50; }
+
+        .rank-price {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .rank-duration {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            color: #333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ffd700, #ffb300);
+            color: #333;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+        }
+
+        .footer {
+            background: rgba(30, 30, 45, 0.95);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .ranks-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">DubaiEco</a>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Ranks</a></li>
+                <li><a href="#">Discord</a></li>
+                <li><a href="#">Vote</a></li>
+            </ul>
+            <button class="cart-btn" onclick="openCart()">
+                <i class="fas fa-shopping-cart"></i> Cart
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Premium Ranks Store</h1>
+        <p>Unlock exclusive perks, commands, and features on DubaiEco Minecraft Server!</p>
+        <div class="server-info">
+            <i class="fas fa-server"></i> Server IP: DubaiEco.me<br>
+            Join our amazing community today!
+        </div>
+    </div>
+
+    <div class="ranks-section">
+        <h2 class="ranks-title">Choose Your Rank</h2>
+        <div class="ranks-grid">
+            <div class="rank-card dusty">
+                <h3 class="rank-name dusty">DUSTY</h3>
+                <div class="rank-price">$1.99</div>
+                <div class="rank-duration">Lifetime</div>
+                <ul class="features-list">
+                    <li>Dusty prefix in chat</li>
+                    <li>3 Homes</li>
+                    <li>/kit Dusty command</li>
+                    <li>/hat command</li>
+                    <li>/depth command</li>
+                </ul>
+                <button class="add-to-cart" onclick="addToCart('DUSTY', 1.99)">ADD TO CART</button>
+            </div>
+
+            <div class="rank-card emo">
+                <h3 class="rank-name emo">EMO+</h3>
+                <div class="rank-price">$3.99</div>
+                <div class="rank-duration">Lifetime</div>
+                <ul class="features-list">
+                    <li>EMO+ prefix in chat</li>
+                    <li>7 Auction House listings</li>
+                    <li>3 Homes</li>
+                    <li>/hat command</li>
+                    <li>/depth command</li>
+                    <li>/kit EMO+ command</li>
+                    <li>/kit Dusty command</li>
+                </ul>
+                <button class="add-to-cart" onclick="addToCart('EMO+', 3.99)">ADD TO CART</button>
+            </div>
+
+            <div class="rank-card hot">
+                <h3 class="rank-name hot">HOT+</h3>
+                <div class="rank-price">$6.99</div>
+                <div class="rank-duration">Lifetime</div>
+                <ul class="features-list">
+                    <li>HOT+ prefix in chat</li>
+                    <li>7x Auction House listings</li>
+                    <li>4 Homes</li>
+                    <li>5 Enderchest rows</li>
+                    <li>/itemname command</li>
+                    <li>/enderchest command</li>
+                    <li>/anvil command</li>
+                    <li>/smithingtable command</li>
+                    <li>/craft command</li>
+                    <li>/kit HOT+ command</li>
+                    <li>/kit EMO+ command</li>
+                    <li>/kit Dusty command</li>
+                </ul>
+                <button class="add-to-cart" onclick="addToCart('HOT+', 6.99)">ADD TO CART</button>
+            </div>
+
+            <div class="rank-card dubai">
+                <h3 class="rank-name dubai">DUBAI</h3>
+                <div class="rank-price">$9.99</div>
+                <div class="rank-duration">Lifetime</div>
+                <ul class="features-list">
+                    <li>Dubai prefix in chat</li>
+                    <li>10x Auction House listings</li>
+                    <li>5 Homes</li>
+                    <li>6 Enderchest rows</li>
+                    <li>/itemname command</li>
+                    <li>/enderchest command</li>
+                    <li>/hat command</li>
+                    <li>/anvil command</li>
+                    <li>/smithingtable command</li>
+                    <li>/craft command</li>
+                    <li>/repairall command</li>
+                    <li>/disposal command</li>
+                    <li>/kit Dubai command</li>
+                    <li>/kit HOT+ command</li>
+                    <li>/kit EMO+ command</li>
+                    <li>/kit Dusty command</li>
+                </ul>
+                <button class="add-to-cart" onclick="addToCart('DUBAI', 9.99)">ADD TO CART</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCart()">&times;</span>
+            <h2><i class="fas fa-shopping-cart"></i> Shopping Cart</h2>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">Total: $0.00</div>
+            <div id="paypal-button-container"></div>
+            <div class="empty-cart" id="emptyCart" style="display: none;">
+                Your cart is empty
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DubaiEco Minecraft Server. All rights reserved.</p>
+        <p>Questions? Contact us on Discord: <a href="https://discord.gg/2Zers6d4E0" style="color: #7c3aed;">https://discord.gg/2Zers6d4E0</a></p>
+    </footer>
+
+    <script>
+        let cart = [];
+        let cartTotal = 0;
+
+        function addToCart(rankName, price) {
+            const existingItem = cart.find(item => item.name === rankName);
+            
+            if (existingItem) {
+                alert('This rank is already in your cart!');
+                return;
+            }
+
+            cart.push({
+                name: rankName,
+                price: price
+            });
+
+            updateCartDisplay();
+            
+            // Show success animation
+            event.target.style.background = 'linear-gradient(135deg, #4caf50, #45a049)';
+            event.target.textContent = 'ADDED!';
+            
+            setTimeout(() => {
+                event.target.style.background = 'linear-gradient(135deg, #7c3aed, #5b21b6)';
+                event.target.textContent = 'ADD TO CART';
+            }, 1500);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotalElement = document.getElementById('cartTotal');
+            const emptyCart = document.getElementById('emptyCart');
+            const paypalContainer = document.getElementById('paypal-button-container');
+
+            cartCount.textContent = cart.length;
+            cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotalElement.textContent = `Total: $${cartTotal.toFixed(2)}`;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '';
+                emptyCart.style.display = 'block';
+                paypalContainer.innerHTML = '';
+                return;
+            }
+
+            emptyCart.style.display = 'none';
+            
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <span style="color: #666;">$${item.price.toFixed(2)}</span>
+                    </div>
+                    <button onclick="removeFromCart(${index})" style="background: #ff4444; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            // Render PayPal button
+            renderPayPalButton();
+        }
+
+        function renderPayPalButton() {
+            const paypalContainer = document.getElementById('paypal-button-container');
+            paypalContainer.innerHTML = '';
+
+            if (cart.length === 0) return;
+
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: cartTotal.toFixed(2)
+                            },
+                            description: `DubaiEco Ranks: ${cart.map(item => item.name).join(', ')}`
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Payment successful! Thank you ' + details.payer.name.given_name + '!');
+                        
+                        // Here you would typically send the purchase details to your server
+                        console.log('Purchase details:', {
+                            orderID: data.orderID,
+                            payerID: data.payerID,
+                            items: cart,
+                            total: cartTotal,
+                            playerDetails: details.payer
+                        });
+                        
+                        // Clear cart after successful purchase
+                        cart = [];
+                        updateCartDisplay();
+                        closeCart();
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal error:', err);
+                    alert('Payment failed. Please try again.');
+                }
+            }).render('#paypal-button-container');
+        }
+
+        function openCart() {
+            updateCartDisplay();
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target === modal) {
+                closeCart();
+            }
+        }
+
+        // Initialize cart display
+        updateCartDisplay();
+    </script>
+</body>
+</html>
